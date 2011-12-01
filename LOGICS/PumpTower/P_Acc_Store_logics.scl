@@ -1,0 +1,26 @@
+extern
+short_name_of_key:routine :string
+procedure P_Acc_Store_route()
+var
+the_elem,dest_elem:element
+ii:integer
+the_part:part
+acc_type_str:String
+begin
+    the_part = celem->out_parts[1]
+    acc_type_str = short_name_of_key(the_part->KEY)
+    for ii = 1 to celem->num_outputs do
+        the_elem = celem->out[ii]
+        if(the_elem->ACC_TYPE == acc_type_str)then
+            dest_elem = the_elem
+            break
+        endif
+    endfor
+    if(dest_elem==null)then
+        sim_warning('warning lack of sorting buf : '+acc_type_str)
+        signal interrupt
+    else
+        transfer the_part to dest_elem
+    endif
+        
+end

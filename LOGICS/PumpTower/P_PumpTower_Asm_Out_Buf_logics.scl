@@ -1,0 +1,20 @@
+#include <PumpTower.inc>
+const
+   P_MAX_PRODUCE_NUMBER_CONST   1024
+extern
+	 PumpTower_Plan  :array[P_MAX_PRODUCE_NUMBER_CONST] of PumpTower_Struc
+	 PumpTower_Plan_tail:integer
+	 
+procedure P_PumpTower_Asm_Out_Buf_route()
+var
+the_part :part
+in_buf:element
+begin
+    the_part = cpart
+    transfer the_part thru output 1
+    in_buf = celem->in[1]->in[1]
+    in_buf->PLAN_SN_IDX = in_buf->PLAN_SN_IDX + 1
+    in_buf->PLAN_SN = PumpTower_Plan[in_buf->PLAN_SN_IDX].name
+    in_buf->KEY = 'PumpTower-S17-S16-S15-S14-S13-S12-S11-S10-S9-S8-S7-S6-S5-S4-S3-S2-S1'
+    P_set_props_for_pumptower_asm_buf(in_buf->KEY,in_buf)
+end

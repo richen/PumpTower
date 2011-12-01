@@ -1,0 +1,39 @@
+routine short_name_of_key(tmp:string):string
+var
+ii:integer
+begin
+    ii = 1
+    while(index(tmp,'-',ii) > 1)do
+        ii = index(tmp,'-',ii) + 1
+    endwhile
+    tmp  = rightstr(tmp,len(tmp)-ii+1)
+    return tmp
+end
+
+routine get_asm_name_of_key(tmp:string):string
+var
+ii:integer
+begin
+    ii = 1
+    while(index(tmp,'-',ii) > 1)do
+        ii = index(tmp,'-',ii) + 1
+    endwhile
+    tmp  = leftstr(tmp,ii-2)
+    return tmp
+end
+
+routine P_get_file_path_by_key(tmp:string):string
+var
+ii:integer
+ss,path_str:string
+begin
+    path_str = '..\\ODLP\\DATA\\ASM'
+    tmp = tmp + '-'
+    while(index(tmp,'-',0) > 0)do   
+        ii = index(tmp,'-',1) + 1
+        ss  = leftstr(tmp,ii-2)
+        tmp = rightstr(tmp,len(tmp)-len(ss)-1)
+        path_str=path_str+'\\'+ss
+    endwhile
+    return path_str
+end

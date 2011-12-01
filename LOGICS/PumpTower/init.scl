@@ -1,0 +1,99 @@
+#include <PumpTower.inc>
+const
+   P_MAX_PRODUCE_NUMBER_CONST   1024
+Var
+	 PumpTower_Plan  :array[P_MAX_PRODUCE_NUMBER_CONST] of PumpTower_Struc
+	 PumpTower_Plan_tail:integer
+	 
+	 
+extern
+	 P_get_file_path_by_key     :routine:string
+	 short_name_of_key          :routine:string
+	 
+procedure PumpTower_Read_workplan()
+Var
+line,part_type:string
+at_time:real
+columns:integer
+begin
+    PumpTower_Plan_tail = 0
+    open file '..\\ODLP\\SCHEDULES\\PumpTower_workplan.csv' for text input as 1
+    while(true)do
+        read_line(#1, line)
+        if(line == $EOF)then
+            break
+        endif
+        if(line == 'END_OF_SCHEDULE')then
+            break
+        endif
+        if(line == '')then
+            continue
+        endif
+        if(line == '#')then
+            continue
+        endif
+        columns = scan_str(line, "\t, ", part_type, at_time)
+        PumpTower_Plan[PumpTower_Plan_tail].name = part_type
+        PumpTower_Plan[PumpTower_Plan_tail].start_time = at_time
+        PumpTower_Plan_tail = PumpTower_Plan_tail + 1
+    endwhile
+end
+/*
+procedure P_set_props_for_pumptower_asm_buf(key_str:string;the_elem:element)
+Var
+file_path:string
+my_line:String
+tmp:String
+qty_val:integer
+begin
+    file_path = P_get_file_path_by_key(key_str)+'\\_asm_props'
+    --write(file_path,cr)
+    open file file_path for text input as 6
+    read_line(#6, my_line)
+    --write(my_line,cr)
+    close #6
+    scan_str(my_line, "\t, ",tmp,qty_val)
+    the_elem->total_cnt = qty_val
+end
+*/
+procedure P_set_props_for_pumptower_asm_buf(key_str:string;the_elem:element)
+Var
+file_path:string
+my_line:String
+tmp,proc_str:String
+qty_val:integer
+line_num,ii:integer
+begin
+    file_path = '..\\ODLP\\DATA\\ASM\\PumpTower\\process_list.txt'
+    open file file_path for text input as 6
+    read_line(#6, my_line)
+    scan_str(my_line, "\t, ",line_num)
+    for ii = 1 to line_num do
+        read_line(#6, my_line)
+        scan_str(my_line, "\t, ",proc_str,qty_val)
+        if(proc_str==short_name_of_key(key_str))then
+            break
+        endif
+        qty_val = -1
+    endfor
+    close #6
+    if (qty_val < 0) then
+        write(key_str,cr)
+    endif
+    the_elem->total_cnt = qty_val
+end
+
+
+
+
+procedure PumpTower_Init()
+Var
+the_elem:element
+file_path :string
+begin
+    PumpTower_Read_workplan()
+    the_elem = get_element('P_PumpTower_Asm_In_Buf_1')
+    the_elem->PLAN_SN = PumpTower_Plan[0].name
+    the_elem->KEY = 'PumpTower-S17-S16-S15-S14-S13-S12-S11-S10-S9-S8-S7-S6-S5-S4-S3-S2-S1'
+    P_set_props_for_pumptower_asm_buf(the_elem->KEY,the_elem)
+end

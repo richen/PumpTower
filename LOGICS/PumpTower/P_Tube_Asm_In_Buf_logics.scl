@@ -1,0 +1,80 @@
+user_attrib
+QTY:real
+Diameter:real
+
+
+--routine Find_ContainerPart_from_InputList_for_Tube(the_elem:element):part
+--var
+--ii:integer
+--the_part:part
+--begin
+--    if(the_elem->num_in_parts > 0)then
+--        for ii = the_elem->num_in_parts to 1 by -1 do
+--            the_part = celem->in_parts[ii]
+--            if(the_part->pclass->name == 'Tube_Pal')then
+--                return the_part
+--            endif
+--        endfor
+--    endif
+--    return null
+--end
+
+procedure P_Tube_Asm_In_Buf_proc()
+var
+num_passed  : Integer
+load_proc   : Process
+the_part,container_part,the_tube   : part
+expected_cnt, requirements_ready, ii : Integer
+the_buf : element
+container_part_cls:part_class
+begin
+    -- If there are no parts in the Element do the requirement in
+    -- IDLE_IDLE state, else do it in BUSY_PROCESSING state
+    if( celem->num_parts > 0 ) then
+        require part ANY in state BUSY_PROCESSING
+    else
+        require part ANY in state IDLE_IDLE
+    endif
+
+    if( celem->class->load_process <> NULL ) then
+        load_proc = do_load_process( )
+        if (load_proc == NULL) then
+            --
+            -- No pass till load process pre_req are available
+            --
+            return
+        endif
+    endif
+--    container_part_cls = get_part_class('Tube_Pal')
+--    container_part = Find_ContainerPart_from_InputList_for_Tube(celem)
+--    if(container_part == null)then
+--        container_part = create(container_part_cls)
+--        container_part->PLAN_SN = celem->PLAN_SN
+--        container_part->KEY = celem->KEY
+--    endif
+--    for ii = celem->num_in_parts to 1 by -1 do
+--        the_part = celem->in_parts[ii]
+--        if(the_part->pclass <> container_part_cls)then
+--            celem->QTY = celem->QTY + the_part->QTY
+--            celem->Diameter = the_part->Diameter
+--            --add_part_to_container_part( container_part, the_part )
+--        endif
+--    endfor
+    the_part = cpart
+    celem->QTY = celem->QTY + the_part->QTY
+    celem->Diameter = the_part->Diameter
+    if(celem->QTY == celem->total_cnt)then
+        for ii = celem->num_in_parts to 1 by -1 do
+            the_part = celem->in_parts[ii]
+            destroy(the_part)
+        endfor
+        the_tube = produce(get_part_class('Tube_asm'))
+        the_tube->PLAN_SN = celem->PLAN_SN
+        the_tube->KEY = celem->KEY
+        the_tube->QTY = celem->QTY
+        the_tube->Diameter = celem->Diameter
+        if(the_tube->Diameter<500)then
+            set_part_display( the_tube, 2 )
+        endif
+    endif
+End

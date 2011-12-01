@@ -1,0 +1,33 @@
+extern
+get_asm_name_of_key:routine :string
+
+procedure P_material_sorting_buf_route()
+var
+the_elem:element
+the_part:part
+asm_key:string
+ii:integer
+the_lbr_cls:element_class
+begin
+    the_elem = get_element('P_PumpTower_Asm_In_Buf_1')
+    the_lbr_cls = get_elem_class('P_PumpTower_Transport_Lbr')
+    for ii = celem->num_out_parts to 1 by -1 do
+        the_part = celem->out_parts[ii]     
+        if(the_part->PLAN_SN <> the_elem->PLAN_SN)then
+            continue
+        endif
+        asm_key = get_asm_name_of_key(the_part->KEY)
+        if(asm_key <> the_elem->KEY)then
+            continue
+        endif
+        switch(the_part->transport_tool)
+        case 'lbr':
+            transfer the_part to the_elem with labor the_lbr_cls
+        case 'crn':
+            continue_case
+        default:
+            transfer the_part to the_elem
+        endswitch
+    endfor
+    delay 600
+end

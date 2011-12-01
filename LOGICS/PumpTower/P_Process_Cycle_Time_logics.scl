@@ -1,0 +1,126 @@
+extern
+	 short_name_of_key          :routine:string
+user_attrib
+    tube_proc_idx:real
+routine P_PumTower_Asm_Process_Cycle_Time():real
+var
+the_part :part
+file_path:string
+my_line:String
+proc_str:String
+key_str:string
+qty_val:integer
+line_num,ii:integer
+P_proc_cycle_time:real
+begin
+    the_part = celem->in_parts[1]
+    key_str = the_part->KEY
+    file_path = '..\\ODLP\\DATA\\ASM\\PumpTower\\process_list.txt'
+    open file file_path for text input as 6
+    read_line(#6, my_line)
+    scan_str(my_line, "\t, ",line_num)
+    for ii = 1 to line_num do
+        read_line(#6, my_line)
+        scan_str(my_line, "\t, ",proc_str,qty_val,P_proc_cycle_time)
+        if(proc_str==short_name_of_key(key_str))then
+            close #6
+            return P_proc_cycle_time
+        endif
+    endfor
+    close #6
+    return 0
+end
+
+
+routine P_Cutting_Process_Time():real
+var
+the_part :part
+file_path:string
+my_line:String
+proc_str:String
+qty_val:integer
+line_num,ii:integer
+P_proc_cycle_time:real
+begin
+    
+    the_part = celem->in_parts[1]
+    the_part->tube_proc_idx = the_part->tube_proc_idx + 1
+    file_path = '..\\ODLP\\DATA\\ASM\\PumpTower\\tube_process_list.txt'
+    open file file_path for text input as 6
+    read_line(#6, my_line)
+    scan_str(my_line, "\t, ",line_num)
+    for ii = 1 to line_num do
+        read_line(#6, my_line)
+        scan_str(my_line, "\t, ",proc_str,P_proc_cycle_time)
+        if(proc_str==celem->proc[the_part->tube_proc_idx]->name)then
+            close #6
+            P_proc_cycle_time = P_proc_cycle_time * the_part->QTY
+            --write(proc_str,'  ',P_proc_cycle_time,cr)
+            return P_proc_cycle_time
+        endif
+    endfor
+    close #6
+    return 0
+end
+
+routine P_Boring_Process_Time():real
+var
+the_part :part
+file_path:string
+my_line:String
+proc_str:String
+qty_val:integer
+line_num,ii:integer
+P_proc_cycle_time:real
+begin
+    the_part = celem->in_parts[1]
+    the_part->tube_proc_idx = the_part->tube_proc_idx + 1
+    file_path = '..\\ODLP\\DATA\\ASM\\PumpTower\\tube_process_list.txt'
+    open file file_path for text input as 6
+    read_line(#6, my_line)
+    scan_str(my_line, "\t, ",line_num)
+    for ii = 1 to line_num do
+        read_line(#6, my_line)
+        scan_str(my_line, "\t, ",proc_str,P_proc_cycle_time)
+        if(proc_str==celem->proc[the_part->tube_proc_idx]->name)then
+            close #6
+            --write(proc_str,'  ',P_proc_cycle_time,cr)
+            return P_proc_cycle_time
+        endif
+    endfor
+    close #6
+    return 0
+end
+
+
+routine P_Tube_Asm_Process_Time():real
+var
+the_part :part
+file_path:string
+my_line:String
+proc_str:String
+qty_val:integer
+line_num,ii:integer
+P_proc_cycle_time:real
+begin
+    the_part = celem->in_parts[1]
+    the_part->tube_proc_idx = the_part->tube_proc_idx + 1
+    file_path = '..\\ODLP\\DATA\\ASM\\PumpTower\\tube_process_list.txt'
+    open file file_path for text input as 6
+    read_line(#6, my_line)
+    scan_str(my_line, "\t, ",line_num)
+    for ii = 1 to line_num do
+        read_line(#6, my_line)
+        scan_str(my_line, "\t, ",proc_str,P_proc_cycle_time)
+        if(proc_str==celem->proc[the_part->tube_proc_idx]->name)then
+            close #6
+            if(proc_str == celem->proc[1]->name)then
+                P_proc_cycle_time = P_proc_cycle_time * (the_part->QTY - 1)
+            endif
+            --write(proc_str,'  ',P_proc_cycle_time,cr)
+            return P_proc_cycle_time
+        endif
+    endfor
+    close #6
+    return 0
+end

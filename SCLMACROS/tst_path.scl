@@ -1,0 +1,19 @@
+procedure get_asm_name_of_key()
+var
+ii:integer
+tmp,ss,path_str:string
+begin
+    ii = 1
+    path_str = '..\\ODLP\\DATA\\ASM'
+    tmp = 'PumpTower-S17-S16-S15-S14-S13-S12-S11-S10-S9-S8-S7-S6-S5-S4-S3-S2'
+    tmp = tmp + '-'
+    while(index(tmp,'-',0) > 0)do
+        
+        ii = index(tmp,'-',1) + 1
+        ss  = leftstr(tmp,ii-2)
+        tmp = rightstr(tmp,len(tmp)-len(ss)-1)
+        path_str=path_str+'\\'+ss
+        write(index(tmp,'-',1),cr)
+    endwhile
+    write(path_str,cr)
+end

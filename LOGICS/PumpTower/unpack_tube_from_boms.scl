@@ -1,0 +1,63 @@
+user_attrib
+PLAN_SN:string
+const
+TUBE_PART_CLS_NAME  'Tube_part'
+
+procedure p_unpack_tube_parts_from_boms(the_part:part)
+var
+the_prt     : part
+ii          : integer
+file_name   : string
+my_line     : string
+line_num    : integer
+key_str     : string
+qty_val     : integer
+tube_display_idx:integer
+begin
+    file_name = '..\\ODLP\\DATA\\Boms\\PumpTower\\' + the_part->DESC_NAME
+    open file file_name for text input as 1
+    read_line(#1, my_line)
+    read_line(#1, my_line)
+    scan_str(my_line, "\t, ",line_num)
+    for ii = 1 to line_num do
+        read_line(#1, my_line)
+        the_prt = produce(get_part_class(TUBE_PART_CLS_NAME))
+        scan_str(my_line, "\t, ",   key_str,qty_val)
+        the_prt->KEY = key_str
+        the_prt->QTY = qty_val
+        the_prt->Diameter = the_part->Diameter
+        the_prt->PLAN_SN = the_part->PLAN_SN
+        tube_display_idx = 1
+        if(the_prt->Diameter<500)then
+            tube_display_idx = tube_display_idx + 1
+        endif
+        if(the_part->QTY == 1)then
+            tube_display_idx = tube_display_idx + 2
+        endif
+        set_part_display( the_prt, tube_display_idx ) 
+    endfor
+    close #1
+end
+
+procedure P_Cutting_Mach_route()
+var
+the_part:part
+ii:integer
+begin
+    for ii = celem->num_out_parts to 1 by -1 do
+        the_part = celem->out_parts[ii]
+        if(the_part->routed)then
+            continue
+        endif
+        if(the_part->pclass->name <> TUBE_PART_CLS_NAME)then
+            p_unpack_tube_parts_from_boms(the_part)
+            destroy(the_part)
+        else
+            route the_part
+        endif
+    endfor
+    --delay 600
+end
+
+
+

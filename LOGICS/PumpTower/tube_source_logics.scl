@@ -1,0 +1,156 @@
+#include <fluid.inc>
+
+Const
+    relative            0	-- Default Mode
+    absolute            1
+
+User_Attrib
+    time_mode           : Real
+
+Procedure p_tube_source_process()
+Var
+    file_id                 :integer
+    tube_display_idx        :integer
+    the_part_class	        : Part_class
+    at_time     	          : Real
+    newclass, lot, ii 	    : Integer
+    the_part_class_name     : String
+    part_type               : String
+    line, ans		          : String
+    columns		            : Integer
+    
+    the_part                : Part
+    my_file_name            : string
+    my_file_id              : integer
+    my_line                 : string
+    tmp_str                 : string
+    key_str                 : string
+    ptype_str               : string
+    qty_val                 : integer
+    weight_val              : real
+    Diameter_val            : real
+
+Begin
+    file_id = 1
+    -- Skip lines until a valid schedule entry is found.
+    open file '..\\ODLP\\schedules\\TubePlan.csv' for text input as file_id
+    while (1) do
+	    read_line(#file_id, line)
+
+    	if (leftstr(line, 1) == '#') then
+    	    -- Its a comment. Skip this line
+    	    continue
+    	endif
+     	switch(line)
+    	    case '' :
+    		  -- An empty line. Skip it.
+
+    	    case $EOF :
+        		continue_case
+    	    case 'repeat' :
+        		continue_case
+    	    case 'REPEAT' :
+        		rewind #file_id
+        		continue
+
+    	    case 'relative' :
+		        continue_case
+    	    case 'RELATIVE' :
+		        celem->time_mode = relative
+		        continue
+
+	        case 'absolute' :
+		        continue_case
+	        case 'ABSOLUTE' :
+		        celem->time_mode = absolute
+		        continue
+
+	        case 'end_of_schedule' :
+        		continue_case
+          case 'END_OF_SCHEDULE' :
+		        close #file_id
+		        end_process
+
+    	  default :
+    	  
+        endswitch
+
+
+
+    -- Valid delimiters are : Tab, Comma and Space
+
+    columns = scan_str(line, "\t, ", the_part_class_name, at_time, lot)
+
+    if (columns < 3) then
+        write('Error in file format for File Based Process Logic in line -', cr)
+        write('\t', line, cr)
+        signal interrupt
+    endif
+    
+    part_type = LEFTSTR(the_part_class_name, 3)
+    -- by default it is a sheet
+    the_part_class = get_part_class('Tube_cls')
+
+    -- Validate part class name
+
+    if (the_part_class == NULL) then
+        if (the_part_class_name <> 'ANY' AND the_part_class_name <> 'Any' \
+            AND the_part_class_name <> 'any') then
+            write('Error in file for File Based Source Process Logic in line -', cr)
+            write('\t', line, cr)
+            write('Part Class <', the_part_class_name, '> does not exist', cr)
+            signal interrupt
+        endif
+    endif
+
+    if (celem->time_mode == relative) then
+	    if (at_time < 0.0) then
+    	    write('Relative time less than 0.0', cr)
+    	    signal interrupt
+    	endif
+
+    	delay (at_time)
+    else
+    	-- It is an Absolute time
+    
+    	if (at_time < sim_time) then
+    	    write('Absolute time less than simulation time', cr)
+    	    signal interrupt
+	    endif
+
+	    delay (at_time - sim_time)
+    endif
+
+    if (lot <= 0) then
+	    write('Invalid lot size in schedule file', cr)
+	    signal interrupt
+    endif
+
+    for ii = 1 to lot do
+        the_part = produce(the_part_class)
+        -- make sure 'my_file_id' is different to 'file_id'
+        my_file_id = file_id + 1
+        if (my_file_id > 10) then
+            my_file_id = 1
+        endif
+
+        my_file_name = '..\\ODLP\\DATA\\Boms\\PumpTower\\' + the_part_class_name
+
+        open file my_file_name for text input as my_file_id
+        read_line(#my_file_id, my_line)
+        scan_str(my_line, "\t, ",   key_str, ptype_str,qty_val, weight_val,Diameter_val)
+        close #my_file_id
+
+        -- assign the part attributes        
+        the_part->DESC_NAME = the_part_class_name
+        --the_part->KEY = key_str
+        the_part->PTYPE = ptype_str
+        the_part->QTY = qty_val
+        the_part->WEIGHT = weight_val
+        the_part->Diameter = Diameter_val
+        if(Diameter_val<500)then
+            set_part_display( the_part, 2 ) 
+        endif
+    endfor
+    endwhile
+End

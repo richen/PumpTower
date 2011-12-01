@@ -1,0 +1,24 @@
+EXTERN
+get_asm_name_of_key:routine :string
+PumpTower_Entered:integer
+
+procedure P_PumpTower_Asm_Mach_route()
+var
+the_part:part
+in_buf:element
+deep_idx:integer
+begin
+    the_part = cpart
+    deep_idx = index(the_part->KEY,'-',11)
+    write(the_part->KEY,'  ', the_part->QTY,cr)
+    in_buf = celem->out[1]
+    if(deep_idx>0)then
+        in_buf->KEY = get_asm_name_of_key(in_buf->KEY)
+        P_set_props_for_pumptower_asm_buf(in_buf->KEY,in_buf)
+        transfer the_part thru output 1
+    else
+        write(the_part->PLAN_SN,' finished!!!!!',cr)
+        transfer the_part thru output 2
+        PumpTower_Entered = PumpTower_Entered -1
+    endif
+end

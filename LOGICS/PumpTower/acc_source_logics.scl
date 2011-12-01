@@ -1,0 +1,126 @@
+var
+PumpTower_Entered:integer
+
+Procedure p_acc_source_process()
+Var
+    line_num                :integer
+    file_id                 :integer
+    acc_display_idx         :integer
+    the_part_class	        : Part_class
+    at_time     	          : Real
+    lot, ii 	    : Integer
+    the_part_class_name     : String
+    part_type               : String
+    transport_str           : String
+    line		                : String
+    columns		              : Integer
+    the_part                : Part
+    my_file_name            : string
+    my_file_id              : integer
+    my_line                 : string
+    tmp_str                 : string
+    key_str                 : string
+    qty_val                 : integer
+    ptype_str               : string
+    weight_val              : real
+    Diameter_val            : real
+
+Begin
+    file_id = 1
+    -- Skip lines until a valid schedule entry is found.
+    open file '..\\ODLP\\SCHEDULES\\PumpTower_workplan.csv' for text input as file_id
+    
+    while (1) do
+        read_line(#file_id, line)
+
+        if (leftstr(line, 1) == '#') then
+            -- Its a comment. Skip this line
+            continue
+        endif
+        switch(line)
+    	    case '' :
+    		  -- An empty line. Skip it.
+    	    case $EOF :
+        		continue_case
+	        case 'end_of_schedule' :
+        		continue_case
+          case 'END_OF_SCHEDULE' :
+		        close #file_id
+		        end_process    	  
+        endswitch
+
+        -- Valid delimiters are : Tab, Comma and Space
+        columns = scan_str(line, "\t, ", part_type, at_time)
+        wait until (sim_time>at_time) frequency 600
+        if(PumpTower_Entered > 6)then
+            sim_warning(part_type + ' WAITTING')
+        endif
+        wait until PumpTower_Entered <= 6 frequency 600
+        PumpTower_Entered = PumpTower_Entered + 1
+        -- make sure 'my_file_id' is different to 'file_id'
+        my_file_id = file_id + 1
+        if (my_file_id > 10) then
+            my_file_id = 1
+        endif
+
+        my_file_name = '..\\ODLP\\data\\boms\\PumpTower\\Accessories.txt'
+        open file my_file_name for text input as my_file_id
+        read_line(#my_file_id, my_line)
+        scan_str(my_line, "\t, ",line_num)
+        for ii = 1 to line_num do
+            read_line(#my_file_id, my_line)
+            scan_str(my_line, "\t, ",   key_str, qty_val, the_part_class_name,acc_display_idx,transport_str)
+            the_part_class = get_part_class(the_part_class_name)
+            the_part = produce(the_part_class)
+            -- assign the part attributes
+            the_part->KEY = key_str
+            the_part->QTY = qty_val
+            the_part->PLAN_SN = part_type
+            the_part->transport_tool = transport_str
+            set_part_display( the_part, acc_display_idx )
+        endfor
+        close #my_file_id
+        
+        my_file_name = '..\\ODLP\\data\\boms\\PumpTower\\Tubes.txt'
+        open file my_file_name for text input as 2
+        read_line(#2, my_line)
+        scan_str(my_line, "\t, ",line_num)
+        for ii = 1 to line_num do
+            read_line(#2, the_part_class_name)
+            my_file_name = '..\\ODLP\\DATA\\Boms\\PumpTower\\' + the_part_class_name
+            open file my_file_name for text input as 5
+            read_line(#5, my_line)
+            scan_str(my_line, "\t, ",   key_str, ptype_str,qty_val, weight_val,Diameter_val)
+            close #5
+            the_part_class = get_part_class('Tube_cls') 
+            the_part = produce(the_part_class)
+            -- assign the part attributes        
+            the_part->DESC_NAME = the_part_class_name
+            --the_part->KEY = key_str
+            the_part->PTYPE = ptype_str
+            the_part->QTY = qty_val
+            the_part->WEIGHT = weight_val
+            the_part->Diameter = Diameter_val
+            the_part->PLAN_SN = part_type
+            if(Diameter_val<500)then
+                set_part_display( the_part, 2 ) 
+            endif
+        endfor
+        close #2
+    endwhile
+End
+
+
+procedure p_acc_source_route()
+Var
+the_part:part
+Begin
+    the_part = cpart
+    if(not the_part->routed)then
+        if(the_part->pclass->name<>'Tube_cls')then
+            route the_part thru output 1
+        else
+            route the_part thru output 2
+        endif
+    endif
+end

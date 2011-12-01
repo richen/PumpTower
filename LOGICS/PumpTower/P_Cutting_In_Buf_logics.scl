@@ -1,0 +1,12 @@
+procedure P_Cutting_In_Buf_route()
+var
+the_part:part
+begin
+    wait until (celem->out[1]->num_parts + celem->out[2]->num_parts)<1 frequency 600
+    the_part = cpart
+    if(the_part->QTY > 1)then
+        route the_part thru output 1
+    else
+        route the_part thru output 2
+    endif
+end

@@ -1,0 +1,10 @@
+procedure P_Tube_Store_route()
+var
+the_elem1,the_elem2:element
+begin
+    the_elem1 = get_element('P_Boring_Out_Buf_1')
+    the_elem2 = get_element('P_Cutting_Out_Buf_1')
+    wait until (the_elem1->num_parts < the_elem1->MAX_CAP and\
+        the_elem2->num_parts < the_elem2->MAX_CAP) frequency 600
+    transfer celem->out_parts[1]
+end

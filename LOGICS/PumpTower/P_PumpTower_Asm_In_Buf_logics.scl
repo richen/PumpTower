@@ -1,0 +1,48 @@
+EXTERN
+get_asm_name_of_key:routine :string
+procedure P_PumpTower_Asm_In_Buf_proc()
+var
+num_passed  : Integer
+load_proc   : Process
+the_part,container_part,the_tower   : part
+expected_cnt, requirements_ready, ii : Integer
+the_buf : element
+tower_cls:part_class
+begin
+    -- If there are no parts in the Element do the requirement in
+    -- IDLE_IDLE state, else do it in BUSY_PROCESSING state
+    if( celem->num_parts > 0 ) then
+        require part ANY in state BUSY_PROCESSING
+    else
+        require part ANY in state IDLE_IDLE
+    endif
+
+    if( celem->class->load_process <> NULL ) then
+        load_proc = do_load_process( )
+        if (load_proc == NULL) then
+            --
+            -- No pass till load process pre_req are available
+            --
+            return
+        endif
+    endif
+    tower_cls = get_part_class('PumpTower')
+    the_part = cpart
+    if(the_part->pclass == tower_cls)then
+        
+    endif
+    celem->QTY = celem->QTY + the_part->QTY
+    if(celem->QTY >= celem->total_cnt)then
+        --write(celem->KEY,'  ',celem->QTY ,'  ', celem->total_cnt,cr)
+        for ii = celem->num_in_parts to 1 by -1 do
+            the_part = celem->in_parts[ii]
+            --write(sim_time,'  ',the_part->KEY,cr)
+            destroy(the_part)
+        endfor
+        the_tower = produce(tower_cls)
+        the_tower->PLAN_SN = celem->PLAN_SN
+        the_tower->KEY = celem->KEY
+        the_tower->QTY = celem->QTY
+        celem->QTY = 0
+    endif
+End

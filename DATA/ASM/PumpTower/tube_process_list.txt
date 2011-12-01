@@ -1,0 +1,6 @@
+5
+P_Cutting_Proc	2400
+P_Boring_Proc	1800
+P_Tube_Asm_Proc1	14400
+P_Tube_Asm_Proc2	14400
+P_Tube_Asm_Proc3	28800
