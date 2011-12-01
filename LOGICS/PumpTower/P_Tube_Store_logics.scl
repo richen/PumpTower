@@ -1,3 +1,11 @@
+/********************************************************************************
+    2011-12-01
+    ODLP PUMPTOWER
+    Richen  E-mail: marchen@orientech.cc
+    P_Tube_Store's route logic.Some limits for MAX_CAP here.
+    Orientech Shanghai, All Rights Reserved.
+*******************************************************************************/
+
 procedure P_Tube_Store_route()
 var
 the_elem1,the_elem2:element

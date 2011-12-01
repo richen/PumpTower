@@ -1,5 +1,14 @@
+/********************************************************************************
+    2011-12-01
+    ODLP PUMPTOWER
+    Richen  E-mail: marchen@orientech.cc
+    P_Acc_Store's route logic.
+    Orientech Shanghai, All Rights Reserved.
+*******************************************************************************/
+
 extern
 short_name_of_key:routine :string
+
 procedure P_Acc_Store_route()
 var
 the_elem,dest_elem:element

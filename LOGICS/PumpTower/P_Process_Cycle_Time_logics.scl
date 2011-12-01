@@ -1,3 +1,11 @@
+/********************************************************************************
+    2011-12-01
+    ODLP PUMPTOWER
+    Richen  E-mail: marchen@orientech.cc
+    Read cycle process time by file based.
+    Orientech Shanghai, All Rights Reserved.
+*******************************************************************************/
+
 extern
 	 short_name_of_key          :routine:string
 user_attrib

@@ -1,3 +1,11 @@
+/********************************************************************************
+    2011-12-01
+    ODLP PUMPTOWER
+    Richen  E-mail: marchen@orientech.cc
+    P_PumpTower_Asm_Mach's route logic.
+    Orientech Shanghai, All Rights Reserved.
+*******************************************************************************/
+
 EXTERN
 get_asm_name_of_key:routine :string
 PumpTower_Entered:integer

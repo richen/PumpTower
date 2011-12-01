@@ -1,3 +1,11 @@
+/********************************************************************************
+    2011-12-01
+    ODLP PUMPTOWER
+    Richen  E-mail: marchen@orientech.cc
+    P_material_sorting_buf's route logic.
+    Orientech Shanghai, All Rights Reserved.
+*******************************************************************************/
+
 extern
 get_asm_name_of_key:routine :string
 

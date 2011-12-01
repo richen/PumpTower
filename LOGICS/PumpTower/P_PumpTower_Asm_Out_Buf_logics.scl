@@ -1,3 +1,11 @@
+/********************************************************************************
+    2011-12-01
+    ODLP PUMPTOWER
+    Richen  E-mail: marchen@orientech.cc
+    Set PLAN_SN for next turn.
+    Orientech Shanghai, All Rights Reserved.
+*******************************************************************************/
+
 #include <PumpTower.inc>
 const
    P_MAX_PRODUCE_NUMBER_CONST   1024

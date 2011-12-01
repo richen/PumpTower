@@ -1,3 +1,11 @@
+/********************************************************************************
+    2011-12-01
+    ODLP PUMPTOWER
+    Richen  E-mail: marchen@orientech.cc
+    P_Tube_Asm_Out_Buf's route logic.Some limits for dest_buf->num_parts here.
+    Orientech Shanghai, All Rights Reserved.
+*******************************************************************************/
+
 procedure P_Tube_Asm_Out_Buf_route()
 var
 the_elem:element

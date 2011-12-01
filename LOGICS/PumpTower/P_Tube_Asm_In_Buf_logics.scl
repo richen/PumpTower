@@ -1,23 +1,14 @@
+/********************************************************************************
+    2011-12-01
+    ODLP PUMPTOWER
+    Richen  E-mail: marchen@orientech.cc
+    Assmbile tubes.
+    Orientech Shanghai, All Rights Reserved.
+*******************************************************************************/
+
 user_attrib
 QTY:real
 Diameter:real
-
-
---routine Find_ContainerPart_from_InputList_for_Tube(the_elem:element):part
---var
---ii:integer
---the_part:part
---begin
---    if(the_elem->num_in_parts > 0)then
---        for ii = the_elem->num_in_parts to 1 by -1 do
---            the_part = celem->in_parts[ii]
---            if(the_part->pclass->name == 'Tube_Pal')then
---                return the_part
---            endif
---        endfor
---    endif
---    return null
---end
 
 procedure P_Tube_Asm_In_Buf_proc()
 var
@@ -45,21 +36,7 @@ begin
             return
         endif
     endif
---    container_part_cls = get_part_class('Tube_Pal')
---    container_part = Find_ContainerPart_from_InputList_for_Tube(celem)
---    if(container_part == null)then
---        container_part = create(container_part_cls)
---        container_part->PLAN_SN = celem->PLAN_SN
---        container_part->KEY = celem->KEY
---    endif
---    for ii = celem->num_in_parts to 1 by -1 do
---        the_part = celem->in_parts[ii]
---        if(the_part->pclass <> container_part_cls)then
---            celem->QTY = celem->QTY + the_part->QTY
---            celem->Diameter = the_part->Diameter
---            --add_part_to_container_part( container_part, the_part )
---        endif
---    endfor
+
     the_part = cpart
     celem->QTY = celem->QTY + the_part->QTY
     celem->Diameter = the_part->Diameter

@@ -1,3 +1,11 @@
+/********************************************************************************
+    2011-12-01
+    ODLP PUMPTOWER
+    Richen  E-mail: marchen@orientech.cc
+    Produce parts for pumptower.
+    Orientech Shanghai, All Rights Reserved.
+*******************************************************************************/
+
 var
 PumpTower_Entered:integer
 
@@ -28,7 +36,7 @@ Var
 Begin
     file_id = 1
     -- Skip lines until a valid schedule entry is found.
-    open file '..\\ODLP\\SCHEDULES\\PumpTower_workplan.csv' for text input as file_id
+    open file '..\\ODLP\\SCHEDULES\\PumpTower\\PumpTower_workplan.csv' for text input as file_id
     
     while (1) do
         read_line(#file_id, line)

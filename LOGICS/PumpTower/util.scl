@@ -1,3 +1,11 @@
+/********************************************************************************
+    2011-12-01
+    ODLP PUMPTOWER
+    Richen  E-mail: marchen@orientech.cc
+    Routine logics here.
+    Orientech Shanghai, All Rights Reserved.
+*******************************************************************************/
+
 routine short_name_of_key(tmp:string):string
 var
 ii:integer

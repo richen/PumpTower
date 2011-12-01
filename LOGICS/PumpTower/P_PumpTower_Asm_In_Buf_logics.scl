@@ -1,5 +1,14 @@
+/********************************************************************************
+    2011-12-01
+    ODLP PUMPTOWER
+    Richen  E-mail: marchen@orientech.cc
+    Assemble parts to pumptower
+    Orientech Shanghai, All Rights Reserved.
+*******************************************************************************/
+
 EXTERN
 get_asm_name_of_key:routine :string
+
 procedure P_PumpTower_Asm_In_Buf_proc()
 var
 num_passed  : Integer

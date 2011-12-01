@@ -1,3 +1,11 @@
+/********************************************************************************
+    2011-12-01
+    ODLP PUMPTOWER
+    Richen  E-mail: marchen@orientech.cc
+    Unpacking pipes by boms file.
+    Orientech Shanghai, All Rights Reserved.
+*******************************************************************************/
+
 user_attrib
 PLAN_SN:string
 const

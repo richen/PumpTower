@@ -1,3 +1,11 @@
+/********************************************************************************
+    2011-12-01
+    ODLP PUMPTOWER
+    Richen  E-mail: marchen@orientech.cc
+    Init_logic for model,set property_for pumptower_asm_buf
+    Orientech Shanghai, All Rights Reserved.
+*******************************************************************************/
+
 #include <PumpTower.inc>
 const
    P_MAX_PRODUCE_NUMBER_CONST   1024
@@ -17,7 +25,7 @@ at_time:real
 columns:integer
 begin
     PumpTower_Plan_tail = 0
-    open file '..\\ODLP\\SCHEDULES\\PumpTower_workplan.csv' for text input as 1
+    open file '..\\ODLP\\SCHEDULES\\PumpTower\\PumpTower_workplan.csv' for text input as 1
     while(true)do
         read_line(#1, line)
         if(line == $EOF)then
@@ -38,24 +46,7 @@ begin
         PumpTower_Plan_tail = PumpTower_Plan_tail + 1
     endwhile
 end
-/*
-procedure P_set_props_for_pumptower_asm_buf(key_str:string;the_elem:element)
-Var
-file_path:string
-my_line:String
-tmp:String
-qty_val:integer
-begin
-    file_path = P_get_file_path_by_key(key_str)+'\\_asm_props'
-    --write(file_path,cr)
-    open file file_path for text input as 6
-    read_line(#6, my_line)
-    --write(my_line,cr)
-    close #6
-    scan_str(my_line, "\t, ",tmp,qty_val)
-    the_elem->total_cnt = qty_val
-end
-*/
+
 procedure P_set_props_for_pumptower_asm_buf(key_str:string;the_elem:element)
 Var
 file_path:string

@@ -1,3 +1,11 @@
+/********************************************************************************
+    2011-12-01
+    ODLP PUMPTOWER
+    Richen  E-mail: marchen@orientech.cc
+    P_Cutting_In_Buf's route logic.
+    Orientech Shanghai, All Rights Reserved.
+*******************************************************************************/
+
 procedure P_Cutting_In_Buf_route()
 var
 the_part:part
