@@ -1,3 +1,11 @@
+/********************************************************************************
+    2011-12-01
+    ODLP PUMPTOWER
+    Richen  E-mail: marchen@orientech.cc
+    Get project library from model_file()
+    Orientech Shanghai, All Rights Reserved.
+*******************************************************************************/
+
 var
 Current_Proj_Lib:string
 
