@@ -17,9 +17,16 @@ procedure P_PumpTower_Asm_Out_Buf_route()
 var
 the_part :part
 in_buf:element
+the_elem:element
 begin
     the_part = cpart
-    transfer the_part thru output 1
+    the_elem = celem->out[1]
+    if(celem->out[2]==null)then
+        transfer the_part to the_elem
+    else
+        crn_set_unload_location(the_elem->in[2], the_part)
+        transfer the_part thru output 2
+    endif
     in_buf = celem->in[1]->in[1]
     in_buf->PLAN_SN_IDX = in_buf->PLAN_SN_IDX + 1
     in_buf->PLAN_SN = PumpTower_Plan[in_buf->PLAN_SN_IDX].name

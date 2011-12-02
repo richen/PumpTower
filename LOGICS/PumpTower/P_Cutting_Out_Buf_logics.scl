@@ -105,7 +105,13 @@ begin
                 the_buf->PLAN_SN = the_tube->PLAN_SN
                 the_buf->total_cnt = p_get_tube_total_qty(the_buf->KEY)
                 --write(the_buf->in[1]->in[1]->name,cr)
-                route the_tube to the_buf
+                if(celem->out[2]==null)then
+                     route the_tube to the_buf
+                else
+                    crn_set_unload_location(the_buf->in[1], the_tube)
+                    route the_tube thru output 2
+                endif
+               
             endif
         endif
     endif

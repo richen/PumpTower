@@ -10,11 +10,19 @@ procedure P_Tube_Asm_Out_Buf_route()
 var
 the_elem:element
 dest_buf:element
+the_part:part
 begin
     the_elem = celem->in[1]->in[1]
     dest_buf = get_element('P_Tube_Warehouse_Buf_1')
     wait until dest_buf->num_parts < 6 frequency 600
-    transfer cpart to dest_buf
+    the_part = cpart
+    if(celem->out[2]==null)then
+        transfer the_part to dest_buf
+    else
+        crn_set_unload_location(dest_buf->in[2], the_part)
+        transfer the_part thru output 2
+    endif
+    
     the_elem->QTY = 0
     the_elem->PLAN_SN = ''
 end

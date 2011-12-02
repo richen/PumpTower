@@ -9,12 +9,19 @@
 procedure P_Cutting_In_Buf_route()
 var
 the_part:part
+dest_buf:element 
 begin
     wait until (celem->out[1]->num_parts + celem->out[2]->num_parts)<1 frequency 600
     the_part = cpart
     if(the_part->QTY > 1)then
-        route the_part thru output 1
+        dest_buf = celem->out[1]
     else
-        route the_part thru output 2
+        dest_buf = celem->out[2]
+    endif
+    if(celem->out[3]==null)then
+        route the_part to dest_buf
+    else
+        crn_set_unload_location(dest_buf->in[1], the_part)
+        route the_part thru output 3
     endif
 end

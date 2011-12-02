@@ -32,7 +32,13 @@ begin
         case 'lbr':
             transfer the_part to the_elem with labor the_lbr_cls
         case 'crn':
-            continue_case
+            if(celem->out[2]==null)then
+                continue_case
+            else
+                -- debug(celem->name,'  crn',cr)
+                crn_set_unload_location(the_elem->in[1], the_part)
+                transfer the_part thru output 2
+            endif
         default:
             transfer the_part to the_elem
         endswitch

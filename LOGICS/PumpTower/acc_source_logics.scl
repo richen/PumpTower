@@ -5,6 +5,8 @@
     Produce parts for pumptower.
     Orientech Shanghai, All Rights Reserved.
 *******************************************************************************/
+const
+P_MAX_PRODUCT_NUM 4
 
 var
 PumpTower_Entered:integer
@@ -60,10 +62,10 @@ Begin
         -- Valid delimiters are : Tab, Comma and Space
         columns = scan_str(line, "\t, ", part_type, at_time)
         wait until (sim_time>at_time) frequency 600
-        if(PumpTower_Entered > 6)then
+        if(PumpTower_Entered > P_MAX_PRODUCT_NUM)then
             sim_warning(part_type + ' WAITTING')
         endif
-        wait until PumpTower_Entered <= 6 frequency 600
+        wait until PumpTower_Entered <= P_MAX_PRODUCT_NUM frequency 600
         PumpTower_Entered = PumpTower_Entered + 1
         -- make sure 'my_file_id' is different to 'file_id'
         my_file_id = file_id + 1

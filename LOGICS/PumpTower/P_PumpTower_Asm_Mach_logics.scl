@@ -8,7 +8,9 @@
 
 EXTERN
 get_asm_name_of_key:routine :string
+short_name_of_key:routine :string
 PumpTower_Entered:integer
+
 
 procedure P_PumpTower_Asm_Mach_route()
 var
@@ -18,7 +20,7 @@ deep_idx:integer
 begin
     the_part = cpart
     deep_idx = index(the_part->KEY,'-',11)
-    write(the_part->KEY,'  ', the_part->QTY,cr)
+    write('current product: ',short_name_of_key(the_part->KEY),'    current qty:  ', the_part->QTY,cr)
     in_buf = celem->out[1]
     if(deep_idx>0)then
         in_buf->KEY = get_asm_name_of_key(in_buf->KEY)
