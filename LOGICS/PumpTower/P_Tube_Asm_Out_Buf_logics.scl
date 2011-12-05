@@ -5,6 +5,8 @@
     P_Tube_Asm_Out_Buf's route logic.Some limits for dest_buf->num_parts here.
     Orientech Shanghai, All Rights Reserved.
 *******************************************************************************/
+EXTERN
+short_name_of_key:routine :string
 
 procedure P_Tube_Asm_Out_Buf_route()
 var
@@ -13,16 +15,21 @@ dest_buf:element
 the_part:part
 begin
     the_elem = celem->in[1]->in[1]
+    the_part = cpart
+    open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Tube_Asm.txt' for text append as 1
+    write(#1,sim_time,'\t',the_part->PLAN_SN,'\t',short_name_of_key(the_part->KEY),'\tFinished','\t',celem->name,cr)
+    close #1 
     dest_buf = get_element('P_Tube_Warehouse_Buf_1')
     wait until dest_buf->num_parts < 6 frequency 600
-    the_part = cpart
     if(celem->out[2]==null)then
         transfer the_part to dest_buf
     else
         crn_set_unload_location(dest_buf->in[2], the_part)
         transfer the_part thru output 2
     endif
-    
+    open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Tube_Asm.txt' for text append as 1
+    write(#1,sim_time,'\t',the_part->PLAN_SN,'\t',short_name_of_key(the_part->KEY),'\tTranslated','\t',celem->name,cr)
+    close #1 
     the_elem->QTY = 0
     the_elem->PLAN_SN = ''
 end

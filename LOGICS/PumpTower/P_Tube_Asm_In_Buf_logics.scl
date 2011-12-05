@@ -68,7 +68,7 @@ begin
         container_part->transport_tool = 'crn'
         
         open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Tube_Asm.txt' for text append as 1
-        write(#1,sim_time,'\t',the_tube->PLAN_SN,'\t',short_name_of_key(the_tube->KEY),'\tFinished',cr)
+        write(#1,sim_time,'\t',the_tube->PLAN_SN,'\t',short_name_of_key(the_tube->KEY),'\tStarted','\t',celem->name,cr)
         close #1 
     endif
 End
