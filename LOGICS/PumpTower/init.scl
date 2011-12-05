@@ -55,7 +55,7 @@ tmp,proc_str:String
 qty_val:integer
 line_num,ii:integer
 begin
-    file_path = '..\\ODLP\\DATA\\ASM\\PumpTower\\process_list.txt'
+    file_path = '..\\ODLP\\DATA\\ASM\\PumpTower\\asm_qty.txt'
     open file file_path for text input as 6
     read_line(#6, my_line)
     scan_str(my_line, "\t, ",line_num)
@@ -74,7 +74,22 @@ begin
     the_elem->total_cnt = qty_val
 end
 
-
+procedure P_clear_file_log()
+Var
+begin
+    open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Store_Cap.txt' for text output as 1
+    close #1 
+    open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_PumpTower_Finished.txt' for text output as 1
+    close #1 
+    open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_PumpTower_Proc.txt' for text output as 1
+    close #1
+    open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Tube_Asm.txt' for text output as 1
+    close #1
+    open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Acc_log.txt' for text output as 1
+    close #1
+    open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\equip_util.txt' for text output as 1
+    close #1
+end
 
 
 procedure PumpTower_Init()
@@ -82,6 +97,7 @@ Var
 the_elem:element
 file_path :string
 begin
+    P_clear_file_log()
     PumpTower_Read_workplan()
     the_elem = get_element('P_PumpTower_Asm_In_Buf_1')
     the_elem->PLAN_SN = PumpTower_Plan[0].name

@@ -9,6 +9,9 @@
 user_attrib
 QTY:real
 Diameter:real
+EXTERN
+short_name_of_key:routine :string
+
 
 procedure P_Tube_Asm_In_Buf_proc()
 var
@@ -45,13 +48,27 @@ begin
             the_part = celem->in_parts[ii]
             destroy(the_part)
         endfor
-        the_tube = produce(get_part_class('Tube_asm'))
+        
+        the_tube = create(get_part_class('Tube_asm'))
         the_tube->PLAN_SN = celem->PLAN_SN
         the_tube->KEY = celem->KEY
         the_tube->QTY = celem->QTY
         the_tube->Diameter = celem->Diameter
+        the_tube->transport_tool = 'crn'
         if(the_tube->Diameter<500)then
             set_part_display( the_tube, 2 )
         endif
+        
+        container_part = produce(get_part_class('Tube_Pal'))
+        add_part_to_container_part(container_part, the_tube)
+        container_part->PLAN_SN = celem->PLAN_SN
+        container_part->KEY = celem->KEY
+        container_part->QTY = celem->QTY
+        container_part->Diameter = celem->Diameter
+        container_part->transport_tool = 'crn'
+        
+        open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Tube_Asm.txt' for text append as 1
+        write(#1,sim_time,'\t',the_tube->PLAN_SN,'\t',short_name_of_key(the_tube->KEY),'\tFinished',cr)
+        close #1 
     endif
 End

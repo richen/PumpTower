@@ -8,15 +8,18 @@
 
 EXTERN
 get_asm_name_of_key:routine :string
+short_name_of_key:routine :string
+Current_Process_num:integer
 
 procedure P_PumpTower_Asm_In_Buf_proc()
 var
 num_passed  : Integer
 load_proc   : Process
 the_part,container_part,the_tower   : part
-expected_cnt, requirements_ready, ii : Integer
+expected_cnt, P_display_idx, ii : Integer
 the_buf : element
 tower_cls:part_class
+part_key_str:string
 begin
     -- If there are no parts in the Element do the requirement in
     -- IDLE_IDLE state, else do it in BUSY_PROCESSING state
@@ -48,7 +51,10 @@ begin
             --write(sim_time,'  ',the_part->KEY,cr)
             destroy(the_part)
         endfor
-        the_tower = produce(tower_cls)
+        part_key_str = short_name_of_key(celem->KEY)
+        P_display_idx = val(rightstr(part_key_str,(len(part_key_str)-1)))
+        write(P_display_idx,cr)
+        the_tower = produce(tower_cls,P_display_idx)
         the_tower->PLAN_SN = celem->PLAN_SN
         the_tower->KEY = celem->KEY
         the_tower->QTY = celem->QTY

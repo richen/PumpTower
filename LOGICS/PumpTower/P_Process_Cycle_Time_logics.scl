@@ -29,7 +29,7 @@ begin
     scan_str(my_line, "\t, ",line_num)
     for ii = 1 to line_num do
         read_line(#6, my_line)
-        scan_str(my_line, "\t, ",proc_str,qty_val,P_proc_cycle_time)
+        scan_str(my_line, "\t, ",proc_str,P_proc_cycle_time)
         if(proc_str==short_name_of_key(key_str))then
             close #6
             return P_proc_cycle_time
@@ -131,4 +131,31 @@ begin
     endfor
     close #6
     return 0
+end
+
+routine P_CRN_Unload_Process_Time():real
+var
+    the_part:part
+    my_line:String
+    tmp,key_str:String
+    P_cycle_time:integer
+    line_num,ii:integer
+    file_path:string
+begin
+    the_part = celem->out_parts[1]
+    file_path = '..\\ODLP\\DATA\\ASM\\PumpTower\\unload_process_list.txt'
+    open file file_path for text input as 1
+    read_line(#1, my_line)
+    scan_str(my_line, "\t, ",line_num)
+    for ii = 1 to line_num do
+        read_line(#1, my_line)
+        scan_str(my_line, "\t, ",key_str,P_cycle_time)
+        if(key_str==short_name_of_key(the_part->KEY))then
+            break
+        endif
+        P_cycle_time = 0
+    endfor
+    close #1
+    -- write(short_name_of_key(the_part->KEY),'  ',P_cycle_time,cr)
+    return P_cycle_time
 end

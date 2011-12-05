@@ -62,9 +62,9 @@ Begin
         -- Valid delimiters are : Tab, Comma and Space
         columns = scan_str(line, "\t, ", part_type, at_time)
         wait until (sim_time>at_time) frequency 600
-        if(PumpTower_Entered > P_MAX_PRODUCT_NUM)then
-            sim_warning(part_type + ' WAITTING')
-        endif
+--        if(PumpTower_Entered > P_MAX_PRODUCT_NUM)then
+--            sim_warning(part_type + ' WAITTING')
+--        endif
         wait until PumpTower_Entered <= P_MAX_PRODUCT_NUM frequency 600
         PumpTower_Entered = PumpTower_Entered + 1
         -- make sure 'my_file_id' is different to 'file_id'

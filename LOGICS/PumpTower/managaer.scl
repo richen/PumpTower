@@ -1,0 +1,72 @@
+extern
+Current_Process_num:integer
+
+routine P_PumpTower_Pie_Chart(ii:integer):integer
+begin
+    if(ii == 1)then
+        return Current_Process_num
+    else
+        return 17-Current_Process_num
+    endif
+end
+
+
+routine Get_Current_Plan():string
+begin
+    return get_element('P_PumpTower_Asm_In_Buf_1')->PLAN_SN
+end
+
+
+procedure P_manager_logic()
+var
+the_elem:element
+P_num:integer
+begin
+    open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Store_Cap.txt' for text append as 1
+    the_elem = get_element('P_Tube_Store_1')
+    write(#1,sim_time,'\t',the_elem->name,'\t',the_elem->num_parts,cr)
+    
+    the_elem = get_element('P_Boring_Out_Buf_1')
+    write(#1,sim_time,'\t',the_elem->name,'\t',the_elem->num_parts,cr)
+    
+    the_elem = get_element('P_Cutting_Out_Buf_1')
+    write(#1,sim_time,'\t',the_elem->name,'\t',the_elem->num_parts,cr)
+    
+    the_elem = get_element('P_Tube_Warehouse_Buf_1')
+    write(#1,sim_time,'\t',the_elem->name,'\t',the_elem->num_parts,cr)
+    close #1
+    
+    
+    open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\equip_util.txt' for text append as 1
+    the_elem = get_element('P_Cutting_Mach_1')
+    write(#1,sim_time,'\t',the_elem->name,'\t',the_elem->busy_time,cr)
+    
+    the_elem = get_element('P_Boring_Mach_1')
+    write(#1,sim_time,'\t',the_elem->name,'\t',the_elem->busy_time,cr)
+    
+    the_elem = get_element('P_Tube_Asm_Mach_1')
+    write(#1,sim_time,'\t',the_elem->name,'\t',the_elem->busy_time,cr)
+    
+    the_elem = get_element('P_Tube_Asm_Mach_2')
+    write(#1,sim_time,'\t',the_elem->name,'\t',the_elem->busy_time,cr)
+    
+    the_elem = get_element('P_CRN_AGV1_1')
+    write(#1,sim_time,'\t',the_elem->name,'\t',the_elem->busy_time,cr)
+    
+    the_elem = get_element('P_CRN_AGV2_1')
+    write(#1,sim_time,'\t',the_elem->name,'\t',the_elem->busy_time,cr)
+    
+    the_elem = get_element('P_CRN_AGV3_1')
+    write(#1,sim_time,'\t',the_elem->name,'\t',the_elem->busy_time,cr)
+    
+    the_elem = get_element('P_CRN_AGV4_1')
+    write(#1,sim_time,'\t',the_elem->name,'\t',the_elem->busy_time,cr)
+    
+    close #1
+    
+    
+    
+    delay 3600*2
+end
+
+

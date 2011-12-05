@@ -8,6 +8,7 @@
 
 extern
 get_asm_name_of_key:routine :string
+short_name_of_key:routine :string
 
 procedure P_material_sorting_buf_route()
 var
@@ -16,11 +17,13 @@ the_part:part
 asm_key:string
 ii:integer
 the_lbr_cls:element_class
+part_str:string
 begin
     the_elem = get_element('P_PumpTower_Asm_In_Buf_1')
     the_lbr_cls = get_elem_class('P_PumpTower_Transport_Lbr')
     for ii = celem->num_out_parts to 1 by -1 do
-        the_part = celem->out_parts[ii]     
+        the_part = celem->out_parts[ii] 
+         
         if(the_part->PLAN_SN <> the_elem->PLAN_SN)then
             continue
         endif
@@ -28,6 +31,7 @@ begin
         if(asm_key <> the_elem->KEY)then
             continue
         endif
+        part_str = the_part->KEY
         switch(the_part->transport_tool)
         case 'lbr':
             transfer the_part to the_elem with labor the_lbr_cls
@@ -42,6 +46,9 @@ begin
         default:
             transfer the_part to the_elem
         endswitch
+        open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Acc_log.txt' for text append as 1
+        write(#1,sim_time,'\t',the_part->PLAN_SN,'\t',short_name_of_key(part_str),cr)
+        close #1 
     endfor
     delay 600
 end

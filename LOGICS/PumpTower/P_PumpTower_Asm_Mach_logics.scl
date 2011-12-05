@@ -11,23 +11,36 @@ get_asm_name_of_key:routine :string
 short_name_of_key:routine :string
 PumpTower_Entered:integer
 
+var
+Current_Process_num:integer
 
 procedure P_PumpTower_Asm_Mach_route()
 var
 the_part:part
 in_buf:element
 deep_idx:integer
+part_key_str:string
 begin
     the_part = cpart
     deep_idx = index(the_part->KEY,'-',11)
-    write('current product: ',short_name_of_key(the_part->KEY),'    current qty:  ', the_part->QTY,cr)
+    part_key_str = short_name_of_key(the_part->KEY)
+    Current_Process_num = val(rightstr(part_key_str,(len(part_key_str)-1)))
+    -- write('current product: ',part_key_str,'    current qty:  ', the_part->QTY,cr)
+    
+    open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_PumpTower_Proc.txt' for text append as 1
+    write(#1,sim_time,'\t',the_part->PLAN_SN,'\t',part_key_str,'\tFinished',cr)
+    close #1 
+    
     in_buf = celem->out[1]
     if(deep_idx>0)then
         in_buf->KEY = get_asm_name_of_key(in_buf->KEY)
         P_set_props_for_pumptower_asm_buf(in_buf->KEY,in_buf)
         transfer the_part thru output 1
     else
-        write(the_part->PLAN_SN,' finished!!!!!',cr)
+        write(the_part->PLAN_SN,'\t',str('%0.0f',sim_time/3600/24),' finished!!!!!',cr)
+        open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_PumpTower_Finished.txt' for text append as 1
+        write(#1,the_part->PLAN_SN,'\t',sim_time,'\tFinished',cr)
+        close #1 
         transfer the_part thru output 2
         PumpTower_Entered = PumpTower_Entered -1
     endif

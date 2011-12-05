@@ -19,9 +19,9 @@ begin
         dest_buf = celem->out[2]
     endif
     if(celem->out[3]==null)then
-        route the_part to dest_buf
+        transfer the_part to dest_buf
     else
         crn_set_unload_location(dest_buf->in[1], the_part)
-        route the_part thru output 3
+        transfer the_part thru output 3
     endif
 end
