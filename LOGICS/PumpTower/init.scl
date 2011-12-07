@@ -76,6 +76,8 @@ end
 
 procedure P_clear_file_log()
 Var
+the_elem:element
+P_Cap:integer
 begin
     open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Store_Cap.txt' for text output as 1
     close #1 
@@ -88,6 +90,40 @@ begin
     open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Acc_log.txt' for text output as 1
     close #1
     open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\equip_util.txt' for text output as 1
+    close #1
+    
+    open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Store_Cap_Init.txt' for text output as 1
+    the_elem = get_element('P_Tube_Store_1')
+    if(the_elem->MAX_CAP>0)then
+        P_Cap = the_elem->MAX_CAP
+    else
+        P_Cap = the_elem->total_capacity
+    endif
+    write(#1,'*Capacity\t',the_elem->name,'\t',P_Cap,cr)
+    
+    the_elem = get_element('P_Boring_Out_Buf_1')
+    if(the_elem->MAX_CAP>0)then
+        P_Cap = the_elem->MAX_CAP
+    else
+        P_Cap = the_elem->total_capacity
+    endif
+    write(#1,'*Capacity\t',the_elem->name,'\t',P_Cap,cr)
+    
+    the_elem = get_element('P_Cutting_Out_Buf_1')
+    if(the_elem->MAX_CAP>0)then
+        P_Cap = the_elem->MAX_CAP
+    else
+        P_Cap = the_elem->total_capacity
+    endif
+    write(#1,'*Capacity\t',the_elem->name,'\t',P_Cap,cr)
+
+    the_elem = get_element('P_Tube_Warehouse_Buf_1')
+    if(the_elem->MAX_CAP>0)then
+        P_Cap = the_elem->MAX_CAP
+    else
+        P_Cap = the_elem->total_capacity
+    endif
+    write(#1,'*Capacity\t',the_elem->name,'\t',P_Cap,cr)
     close #1
 end
 

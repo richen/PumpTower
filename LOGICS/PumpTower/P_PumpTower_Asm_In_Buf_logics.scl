@@ -52,6 +52,9 @@ begin
             destroy(the_part)
         endfor
         part_key_str = short_name_of_key(celem->KEY)
+        open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_PumpTower_Proc.txt' for text append as 1
+        write(#1,sim_time,'\t',celem->PLAN_SN,'\t',part_key_str,'\tStarted',cr)
+        close #1 
         P_display_idx = val(rightstr(part_key_str,(len(part_key_str)-1)))
         write(P_display_idx,cr)
         the_tower = produce(tower_cls,P_display_idx)
@@ -59,5 +62,6 @@ begin
         the_tower->KEY = celem->KEY
         the_tower->QTY = celem->QTY
         celem->QTY = 0
+        
     endif
 End
