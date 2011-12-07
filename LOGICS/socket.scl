@@ -1,0 +1,45 @@
+const
+    MINI_SLEEP_INRWEVAL 6
+    
+user_attrib
+    taskID:real
+    sleep_interv:real
+    
+var
+    sys_ID_str:real
+    real_time:real
+    sleep_interval:real
+
+procedure c_proj_init()
+var
+    the_buf:element
+begin
+    the_buf = get_element('systemID_1')
+    sys_ID_str = the_buf->taskID
+    sleep_interval = the_buf->sleep_interv
+    if(sleep_interval < MINI_SLEEP_INRWEVAL)then
+        sleep_interval = MINI_SLEEP_INRWEVAL
+    endif
+    open client 'localhost:2012' for update as 20
+    write(#20,"QDC|",sys_ID_str,"|CreateTaskCompleted",cr)
+end
+
+procedure c_proj_term()
+begin
+    write(#20,"QDC|",sys_ID_str,"|RunCompleted",cr)
+    close #20
+end
+
+procedure c_proj_sim_proc()
+begin
+    if(SYSTIME()>(real_time + sleep_interval))then
+        real_time = SYSTIME()
+        write(#20,"QDC|",sys_ID_str,"RuningTime|",sim_time,cr)
+        write(sim_time,cr)
+    endif
+    if(SYSTIME()<real_time)then
+        real_time = SYSTIME()
+    endif
+    delay 600
+end
+        
