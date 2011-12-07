@@ -13,6 +13,9 @@ dest_buf:element
 begin
     wait until (celem->out[1]->num_parts + celem->out[2]->num_parts)<1 frequency 600
     the_part = cpart
+    open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Tube_Cutting.txt' for text append as 1
+    write(#1,sim_time,'\t',the_part->PLAN_SN,'\t',the_part->DESC_NAME,cr)
+    close #1 
     if(the_part->QTY > 1)then
         dest_buf = celem->out[1]
     else
