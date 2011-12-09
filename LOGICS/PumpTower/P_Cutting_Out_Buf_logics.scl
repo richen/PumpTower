@@ -88,7 +88,7 @@ begin
     the_buf = P_get_free_buf_for_tube(the_buf_cls)
     if(the_buf <>null)then
         the_tube = null
-        tube_mini_create_time = 10e8
+        tube_mini_create_time = 10e15
         if(the_buf<>null)then
             for ii = celem->num_out_parts to 1 by -1 do
                 the_part = celem->out_parts[ii]
