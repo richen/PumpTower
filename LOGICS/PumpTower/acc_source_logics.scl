@@ -8,6 +8,9 @@
 const
 P_MAX_PRODUCT_NUM 4
 
+user_attrib
+P_display_idx:real
+
 var
 PumpTower_Entered:integer
 
@@ -87,7 +90,8 @@ Begin
             the_part->QTY = qty_val
             the_part->PLAN_SN = part_type
             the_part->transport_tool = transport_str
-            set_part_display( the_part, acc_display_idx )
+            the_part->P_display_idx = acc_display_idx
+            --set_part_display( the_part, acc_display_idx )
         endfor
         close #my_file_id
         

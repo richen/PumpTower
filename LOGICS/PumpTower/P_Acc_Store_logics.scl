@@ -5,6 +5,8 @@
     P_Acc_Store's route logic.
     Orientech Shanghai, All Rights Reserved.
 *******************************************************************************/
+const
+P_CURRENT_ACC_NUM 3
 
 extern
 short_name_of_key:routine :string
@@ -16,7 +18,10 @@ ii:integer
 the_part:part
 acc_type_str:String
 begin
+    wait until celem->out[1]->num_parts<=P_CURRENT_ACC_NUM frequency 600
     the_part = celem->out_parts[1]
+    set_part_display( the_part, the_part->P_display_idx )
+    
     acc_type_str = short_name_of_key(the_part->KEY)
     for ii = 1 to celem->num_outputs do
         the_elem = celem->out[ii]
