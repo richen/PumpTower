@@ -13,42 +13,46 @@ short_name_of_key:routine :string
 procedure P_material_sorting_buf_route()
 var
 the_elem:element
+the_elem_cls:element_class
 the_part:part
 asm_key:string
-ii:integer
+ii,kk:integer
 the_lbr_cls:element_class
 part_str:string
 begin
-    the_elem = get_element('P_PumpTower_Asm_In_Buf_1')
-    the_lbr_cls = get_elem_class('P_PumpTower_Transport_Lbr')
-    for ii = celem->num_out_parts to 1 by -1 do
-        the_part = celem->out_parts[ii] 
-         
-        if(the_part->PLAN_SN <> the_elem->PLAN_SN)then
-            continue
-        endif
-        asm_key = get_asm_name_of_key(the_part->KEY)
-        if(asm_key <> the_elem->KEY)then
-            continue
-        endif
-        part_str = the_part->KEY
-        switch(the_part->transport_tool)
-        case 'lbr':
-            transfer the_part to the_elem with labor the_lbr_cls
-        case 'crn':
-            if(celem->out[2]==null)then
-                continue_case
-            else
-                -- debug(celem->name,'  crn',cr)
-                crn_set_unload_location(the_elem->in[1], the_part)
-                transfer the_part thru output 2
+    the_elem_cls = get_element_class('P_PumpTower_Asm_In_Buf')
+    for kk = 1 to the_elem_cls->num_element do
+        the_elem = the_elem_cls->elements[kk]
+        for ii = celem->num_out_parts to 1 by -1 do
+            the_part = celem->out_parts[ii] 
+            if(the_part->PLAN_SN <> the_elem->PLAN_SN)then
+                continue
             endif
-        default:
-            transfer the_part to the_elem
-        endswitch
-        open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Acc_log.txt' for text append as 1
-        write(#1,sim_time,'\t',the_part->PLAN_SN,'\t',short_name_of_key(part_str),cr)
-        close #1 
+            asm_key = get_asm_name_of_key(the_part->KEY)
+            if(asm_key <> the_elem->KEY)then
+                continue
+            endif
+            part_str = the_part->KEY
+            switch(the_part->transport_tool)
+            case 'lbr':
+            the_lbr_cls = get_elem_class('P_PumpTower_Transport_Lbr')
+                transfer the_part to the_elem with labor the_lbr_cls
+            case 'crn':
+                if(celem->out[2]==null)then
+                    continue_case
+                else
+                    -- debug(celem->name,'  crn',cr)
+                    crn_set_unload_location(the_elem->in[1], the_part)
+                    transfer the_part thru output 2
+                endif
+            default:
+                transfer the_part to the_elem
+            endswitch
+            open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Acc_log.txt' for text append as 1
+            write(#1,sim_time,'\t',the_part->PLAN_SN,'\t',short_name_of_key(part_str),'\t',the_elem->name,cr)
+            close #1 
+            --write(sim_time,'\t',the_part->PLAN_SN,'\t',short_name_of_key(part_str),'  ',the_elem->name,cr)
+        endfor
     endfor
     delay 600
 end

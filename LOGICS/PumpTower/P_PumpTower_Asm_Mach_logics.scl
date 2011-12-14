@@ -39,7 +39,7 @@ begin
     else
         write(the_part->PLAN_SN,'\t',str('%0.0f',sim_time/3600/24),' finished!!!!!',cr)
         open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_PumpTower_Finished.txt' for text append as 1
-        write(#1,the_part->PLAN_SN,'\t',sim_time,'\tFinished',cr)
+        write(#1,the_part->PLAN_SN,'\t',sim_time,'\tFinished','\t',celem->name,cr)
         close #1 
         transfer the_part thru output 2
         PumpTower_Entered = PumpTower_Entered -1

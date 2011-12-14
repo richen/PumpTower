@@ -8,8 +8,7 @@
 
 extern
 	 short_name_of_key          :routine:string
-user_attrib
-    tube_proc_idx:real
+
 routine P_PumTower_Asm_Process_Cycle_Time():real
 var
 the_part :part
@@ -52,7 +51,6 @@ P_proc_cycle_time:real
 begin
     
     the_part = celem->in_parts[1]
-    the_part->tube_proc_idx = the_part->tube_proc_idx + 1
     file_path = '..\\ODLP\\DATA\\ASM\\PumpTower\\tube_process_list.txt'
     open file file_path for text input as 6
     read_line(#6, my_line)
@@ -60,7 +58,7 @@ begin
     for ii = 1 to line_num do
         read_line(#6, my_line)
         scan_str(my_line, "\t, ",proc_str,P_proc_cycle_time)
-        if(proc_str==celem->proc[the_part->tube_proc_idx]->name)then
+        if(proc_str==celem->curr_proc->name)then
             close #6
             P_proc_cycle_time = P_proc_cycle_time * the_part->QTY
             --write(proc_str,'  ',P_proc_cycle_time,cr)
@@ -82,7 +80,6 @@ line_num,ii:integer
 P_proc_cycle_time:real
 begin
     the_part = celem->in_parts[1]
-    the_part->tube_proc_idx = the_part->tube_proc_idx + 1
     file_path = '..\\ODLP\\DATA\\ASM\\PumpTower\\tube_process_list.txt'
     open file file_path for text input as 6
     read_line(#6, my_line)
@@ -90,7 +87,7 @@ begin
     for ii = 1 to line_num do
         read_line(#6, my_line)
         scan_str(my_line, "\t, ",proc_str,P_proc_cycle_time)
-        if(proc_str==celem->proc[the_part->tube_proc_idx]->name)then
+        if(proc_str==celem->curr_proc->name)then
             close #6
             --write(proc_str,'  ',P_proc_cycle_time,cr)
             return P_proc_cycle_time
@@ -111,8 +108,8 @@ qty_val:integer
 line_num,ii:integer
 P_proc_cycle_time:real
 begin
+    --write(celem->curr_proc->name,cr)
     the_part = celem->in_parts[1]
-    the_part->tube_proc_idx = the_part->tube_proc_idx + 1
     file_path = '..\\ODLP\\DATA\\ASM\\PumpTower\\tube_process_list.txt'
     open file file_path for text input as 6
     read_line(#6, my_line)
@@ -120,9 +117,9 @@ begin
     for ii = 1 to line_num do
         read_line(#6, my_line)
         scan_str(my_line, "\t, ",proc_str,P_proc_cycle_time)
-        if(proc_str==celem->proc[the_part->tube_proc_idx]->name)then
+        if(proc_str==celem->curr_proc->name)then
             close #6
-            if(proc_str == celem->proc[1]->name)then
+            if(proc_str == celem->curr_proc->name)then
                 P_proc_cycle_time = P_proc_cycle_time * (the_part->QTY - 1)
             endif
             --write(proc_str,'  ',P_proc_cycle_time,cr)

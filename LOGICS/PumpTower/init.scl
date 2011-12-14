@@ -17,6 +17,7 @@ Var
 extern
 	 P_get_file_path_by_key     :routine:string
 	 short_name_of_key          :routine:string
+	  P_Current_Plan_SN_IDX :integer
 	 
 procedure PumpTower_Read_workplan()
 Var
@@ -130,13 +131,22 @@ end
 
 procedure PumpTower_Init()
 Var
+the_elem_cls:element_class
 the_elem:element
 file_path :string
+ii:integer
 begin
     P_clear_file_log()
     PumpTower_Read_workplan()
-    the_elem = get_element('P_PumpTower_Asm_In_Buf_1')
-    the_elem->PLAN_SN = PumpTower_Plan[0].name
-    the_elem->KEY = 'PumpTower-S17-S16-S15-S14-S13-S12-S11-S10-S9-S8-S7-S6-S5-S4-S3-S2-S1'
-    P_set_props_for_pumptower_asm_buf(the_elem->KEY,the_elem)
+    
+    the_elem_cls = get_elem_class('P_PumpTower_Asm_In_Buf')
+    P_Current_Plan_SN_IDX = -1
+    for ii = 1 to the_elem_cls->num_element do
+        the_elem = the_elem_cls->elements[ii]
+        P_Current_Plan_SN_IDX = P_Current_Plan_SN_IDX + 1
+        the_elem->PLAN_SN = PumpTower_Plan[P_Current_Plan_SN_IDX].name
+        the_elem->KEY = 'PumpTower-S17-S16-S15-S14-S13-S12-S11-S10-S9-S8-S7-S6-S5-S4-S3-S2-S1'
+        P_set_props_for_pumptower_asm_buf(the_elem->KEY,the_elem)
+        delay 50*3600*24
+    endfor
 end

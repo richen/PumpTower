@@ -6,7 +6,7 @@
     Orientech Shanghai, All Rights Reserved.
 *******************************************************************************/
 const
-P_MAX_PRODUCT_NUM 4
+P_MAX_PRODUCT_NUM 6
 
 user_attrib
 P_display_idx:real

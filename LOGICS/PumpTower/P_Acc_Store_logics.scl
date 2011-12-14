@@ -6,7 +6,7 @@
     Orientech Shanghai, All Rights Reserved.
 *******************************************************************************/
 const
-P_CURRENT_ACC_NUM 3
+P_CURRENT_ACC_NUM 4
 
 extern
 short_name_of_key:routine :string

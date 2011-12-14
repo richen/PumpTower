@@ -12,15 +12,21 @@ const
 extern
 	 PumpTower_Plan  :array[P_MAX_PRODUCE_NUMBER_CONST] of PumpTower_Struc
 	 PumpTower_Plan_tail:integer
+var
+    P_Current_Plan_SN_IDX :integer
 	 
 procedure P_PumpTower_Asm_Out_Buf_route()
 var
 the_part :part
 in_buf:element
 the_elem:element
+ii:integer
+the_store_buf:element
 begin
+    the_store_buf = get_element('P_house_out_buf_1')
+    wait until the_store_buf->num_parts <= 2 frequency 3600
     the_part = cpart
-    the_elem = celem->out[1]
+    the_elem = celem->out_class[1]->elements[1]
     if(celem->out[2]==null)then
         transfer the_part to the_elem
     else
@@ -28,8 +34,10 @@ begin
         transfer the_part thru output 2
     endif
     in_buf = celem->in[1]->in[1]
-    in_buf->PLAN_SN_IDX = in_buf->PLAN_SN_IDX + 1
-    in_buf->PLAN_SN = PumpTower_Plan[in_buf->PLAN_SN_IDX].name
+    P_Current_Plan_SN_IDX = P_Current_Plan_SN_IDX + 1
+    -- in_buf->PLAN_SN_IDX = P_Current_Plan_SN_IDX
+    in_buf->PLAN_SN = PumpTower_Plan[P_Current_Plan_SN_IDX].name
+    --write(in_buf->name,'  ',in_buf->PLAN_SN,cr)
     in_buf->KEY = 'PumpTower-S17-S16-S15-S14-S13-S12-S11-S10-S9-S8-S7-S6-S5-S4-S3-S2-S1'
     P_set_props_for_pumptower_asm_buf(in_buf->KEY,in_buf)
 end
