@@ -72,6 +72,7 @@ the_buf_cls:element_class
 the_buf:element
 the_part,the_tube:part
 ii:integer
+part_cnt:integer
 tube_mini_create_time:real
 begin
     the_buf_cls = get_elem_class('P_Tube_Asm_In_Buf')
@@ -82,11 +83,12 @@ begin
         endif
         the_buf = P_get_buf_for_tube_by_plansn(the_part,the_buf_cls)
         if(the_buf <> null)then
+            part_cnt = the_part->QTY
             transfer the_part to the_buf
             open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Store_Write.txt' for text append as 1
             write(#1,sim_time,'\t',celem->name,'\t','Routed',cr)
             close#1
-            -- celem->Curr_Tube_Cnt = celem->Curr_Tube_Cnt - 1
+            celem->Curr_Tube_Cnt = celem->Curr_Tube_Cnt - part_cnt
         endif
     endfor
     the_buf = P_get_free_buf_for_tube(the_buf_cls)
@@ -118,7 +120,7 @@ begin
                 open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Store_Write.txt' for text append as 1
                 write(#1,sim_time,'\t',celem->name,'\t','Routed',cr)
                 close#1
-                -- celem->Curr_Tube_Cnt = celem->Curr_Tube_Cnt - 1
+                celem->Curr_Tube_Cnt = celem->Curr_Tube_Cnt - the_tube->QTY
             endif
         endif
     endif

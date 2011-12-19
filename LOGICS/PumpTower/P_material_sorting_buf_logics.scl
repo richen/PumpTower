@@ -17,6 +17,7 @@ the_elem_cls:element_class
 the_part:part
 asm_key:string
 ii,kk:integer
+part_cnt:integer
 the_lbr_cls:element_class
 part_str:string
 begin
@@ -33,6 +34,7 @@ begin
                 continue
             endif
             part_str = the_part->KEY
+            part_cnt = the_part->QTY
             switch(the_part->transport_tool)
             case 'lbr':
                 the_lbr_cls = get_elem_class('P_PumpTower_Transport_Lbr')
@@ -57,6 +59,7 @@ begin
                 write(#1,sim_time,'\t',celem->name,'\t','Routed',cr)
                 close#1
             endif
+            celem->Curr_Tube_Cnt = celem->Curr_Tube_Cnt - 1
         endfor
     endfor
     delay 600

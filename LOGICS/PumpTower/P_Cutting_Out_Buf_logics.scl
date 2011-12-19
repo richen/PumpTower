@@ -1,15 +1,20 @@
+user_attrib
+QTY:real
 procedure P_Cutting_Out_Buf_route()
 var
 the_part:part
 the_elem:element
+part_cnt:integer
 begin
     the_elem = get_element('P_Boring_Out_Buf_1')
-    wait until (the_elem->num_parts < the_elem->MAX_CAP) frequency 600
---    the_elem->Curr_Tube_Cnt = the_elem->Curr_Tube_Cnt + 1
+    wait until (the_elem->Curr_Tube_Cnt < the_elem->MAX_CAP) frequency 600
     the_part = celem->out_parts[1]
+    part_cnt = the_part->QTY
+    the_elem->Curr_Tube_Cnt = the_elem->Curr_Tube_Cnt + part_cnt
     open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Store_Write.txt' for text append as 1
     write(#1,sim_time,'\t',celem->name,'\t','Routed',cr)
     close#1
+    
     transfer the_part thru output 1
---    celem->Curr_Tube_Cnt = celem->Curr_Tube_Cnt - 1
+    celem->Curr_Tube_Cnt = celem->Curr_Tube_Cnt - part_cnt
 end
