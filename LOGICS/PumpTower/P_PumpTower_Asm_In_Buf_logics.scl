@@ -53,7 +53,7 @@ begin
         endfor
         part_key_str = short_name_of_key(celem->KEY)
         open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_PumpTower_Proc.txt' for text append as 1
-        write(#1,sim_time,'\t',celem->PLAN_SN,'\t',part_key_str,'\tStarted',cr)
+        write(#1,sim_time,'\t',celem->PLAN_SN,'\t',part_key_str,'\tStarted','\t',celem->name,cr)
         close #1 
         P_display_idx = val(rightstr(part_key_str,(len(part_key_str)-1)))
         write(P_display_idx,cr)

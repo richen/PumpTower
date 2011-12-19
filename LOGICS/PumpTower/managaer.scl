@@ -56,9 +56,6 @@ begin
     the_elem = get_element('P_CRN_AGV2_1')
     write(#1,sim_time,'\t',the_elem->name,'\t',the_elem->busy_time,cr)
     
-    the_elem = get_element('P_CRN_AGV3_1')
-    write(#1,sim_time,'\t',the_elem->name,'\t',the_elem->busy_time,cr)
-    
     the_elem = get_element('P_CRN_AGV4_1')
     write(#1,sim_time,'\t',the_elem->name,'\t',the_elem->busy_time,cr)
     

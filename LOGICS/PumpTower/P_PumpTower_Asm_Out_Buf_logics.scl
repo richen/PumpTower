@@ -24,7 +24,7 @@ ii:integer
 the_store_buf:element
 begin
     the_store_buf = get_element('P_house_out_buf_1')
-    wait until the_store_buf->num_parts <= 2 frequency 3600
+    wait until the_store_buf->num_parts < the_store_buf->MAX_CAP frequency 3600
     the_part = cpart
     the_elem = celem->out_class[1]->elements[1]
     if(celem->out[2]==null)then

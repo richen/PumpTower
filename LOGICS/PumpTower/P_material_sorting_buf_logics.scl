@@ -35,7 +35,7 @@ begin
             part_str = the_part->KEY
             switch(the_part->transport_tool)
             case 'lbr':
-            the_lbr_cls = get_elem_class('P_PumpTower_Transport_Lbr')
+                the_lbr_cls = get_elem_class('P_PumpTower_Transport_Lbr')
                 transfer the_part to the_elem with labor the_lbr_cls
             case 'crn':
                 if(celem->out[2]==null)then
@@ -52,6 +52,11 @@ begin
             write(#1,sim_time,'\t',the_part->PLAN_SN,'\t',short_name_of_key(part_str),'\t',the_elem->name,cr)
             close #1 
             --write(sim_time,'\t',the_part->PLAN_SN,'\t',short_name_of_key(part_str),'  ',the_elem->name,cr)
+            if(celem->name == 'P_Tube_Warehouse_Buf_1')then
+                open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Store_Write.txt' for text append as 1
+                write(#1,sim_time,'\t',celem->name,'\t','Routed',cr)
+                close#1
+            endif
         endfor
     endfor
     delay 600

@@ -1,121 +1,15 @@
-/********************************************************************************
-    2011-12-01
-    ODLP PUMPTOWER
-    Richen  E-mail: marchen@orientech.cc
-    P_Cutting_Out_Buf's route logic.
-    Orientech Shanghai, All Rights Reserved.
-*******************************************************************************/
-
-extern
-    get_asm_name_of_key:routine:string
-    short_name_of_key:routine:string
-
-routine p_get_tube_total_qty(asm_tube_key:string):integer
-var
-my_line,asm_key,tube_name:string
-line_num,asm_cnt,ii:integer
-begin
-    open file ("..\\ODLP\\DATA\\Boms\\PumpTower\\Tube_asm_num.txt" ) for text input as 2
-    read_line(#2,my_line)
-    scan_str(my_line,"\t, ",line_num)
-    for ii = 1 to line_num do
-        read_line(#2,my_line)
-        scan_str(my_line,"\t, ",asm_key,asm_cnt)
-        tube_name = short_name_of_key((asm_tube_key))
-        if(asm_key==tube_name)then
-            close #2
-            return asm_cnt
-        endif
-    endfor
-    close #2
-    sim_warning('wrong asm key :'+tube_name)
-    return -1
-end
-
-routine P_get_buf_for_tube_by_plansn(the_part:part;the_buf_cls:element_class):element
-var
-ii:integer
-the_buf:element
-asm_tube_key :string
-begin
-    for ii = 1 to the_buf_cls->num_element do
-        the_buf = the_buf_cls->elements[ii]
-        asm_tube_key = get_asm_name_of_key(the_part->KEY)
-        if(asm_tube_key <> the_buf->KEY)then
-            continue
-        endif
-        if(the_buf->PLAN_SN == the_part->PLAN_SN)then
-            return the_buf
-        endif
-    endfor
-    return null
-end
-
-routine P_get_free_buf_for_tube(the_buf_cls:element_class):element
-var
-ii:integer
-the_buf:element
-begin
-    for ii = 1 to the_buf_cls->num_element do
-        the_buf = the_buf_cls->elements[ii]
-        if(the_buf->PLAN_SN == '')then
-            return the_buf
-        endif
-    endfor
-    return null
-end
-
-
 procedure P_Cutting_Out_Buf_route()
 var
-the_buf_cls:element_class
-the_buf:element
-the_part,the_tube:part
-ii:integer
-tube_mini_create_time:real
+the_part:part
+the_elem:element
 begin
-    the_buf_cls = get_elem_class('P_Tube_Asm_In_Buf')
-    for ii = celem->num_out_parts to 1 by -1 do
-        the_part = celem->out_parts[ii]
-        if(the_part->routed)then
-            continue
-        endif
-        the_buf = P_get_buf_for_tube_by_plansn(the_part,the_buf_cls)
-        if(the_buf <>null)then
-            route the_part to the_buf
-        endif
-    endfor
-    the_buf = P_get_free_buf_for_tube(the_buf_cls)
-    if(the_buf <>null)then
-        the_tube = null
-        tube_mini_create_time = 10e15
-        if(the_buf<>null)then
-            for ii = celem->num_out_parts to 1 by -1 do
-                the_part = celem->out_parts[ii]
-                if(the_part->routed)then
-                    continue
-                endif
-                if(the_part->create_time<tube_mini_create_time)then
-                    the_tube = the_part
-                    tube_mini_create_time = the_part->create_time
-                endif
-            endfor
-            if(the_tube<>null)then
-                the_buf->KEY = get_asm_name_of_key(the_tube->KEY)
-                the_buf->PLAN_SN = the_tube->PLAN_SN
-                the_buf->total_cnt = p_get_tube_total_qty(the_buf->KEY)
-                --write(the_buf->in[1]->in[1]->name,cr)
-                if(celem->out[2]==null)then
-                     route the_tube to the_buf
-                else
-                    crn_set_unload_location(the_buf->in[1], the_tube)
-                    route the_tube thru output 2
-                endif
-               
-            endif
-        endif
-    endif
-    delay 600
+    the_elem = get_element('P_Boring_Out_Buf_1')
+    wait until (the_elem->num_parts < the_elem->MAX_CAP) frequency 600
+--    the_elem->Curr_Tube_Cnt = the_elem->Curr_Tube_Cnt + 1
+    the_part = celem->out_parts[1]
+    open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Store_Write.txt' for text append as 1
+    write(#1,sim_time,'\t',celem->name,'\t','Routed',cr)
+    close#1
+    transfer the_part thru output 1
+--    celem->Curr_Tube_Cnt = celem->Curr_Tube_Cnt - 1
 end
-
-

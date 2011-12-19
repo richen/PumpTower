@@ -9,6 +9,8 @@
 user_attrib
 QTY:real
 Diameter:real
+total_cnt:real
+
 EXTERN
 short_name_of_key:routine :string
 

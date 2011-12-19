@@ -28,7 +28,7 @@ begin
     -- write('current product: ',part_key_str,'    current qty:  ', the_part->QTY,cr)
     
     open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_PumpTower_Proc.txt' for text append as 1
-    write(#1,sim_time,'\t',the_part->PLAN_SN,'\t',part_key_str,'\tFinished',cr)
+    write(#1,sim_time,'\t',the_part->PLAN_SN,'\t',part_key_str,'\tFinished','\t',celem->name,cr)
     close #1 
     
     in_buf = celem->out[1]

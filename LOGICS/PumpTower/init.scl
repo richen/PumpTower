@@ -92,6 +92,11 @@ begin
     close #1
     open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\equip_util.txt' for text output as 1
     close #1
+    open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Tube_Cutting.txt' for text output as 1
+    close #1
+    open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Store_Write.txt' for text output as 1
+    close #1
+    
     
     open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Store_Cap_Init.txt' for text output as 1
     the_elem = get_element('P_Tube_Store_1')

@@ -1,0 +1,46 @@
+procedure P_cap_stat_proc()
+var
+num_passed  : Integer
+load_proc   : Process
+the_part,container_part : part
+ii : Integer
+the_buf : element
+tower_cls:part_class
+part_key_str:string
+begin
+    -- If there are no parts in the Element do the requirement in
+    -- IDLE_IDLE state, else do it in BUSY_PROCESSING state
+    if( celem->num_parts > 0 ) then
+        require part ANY in state BUSY_PROCESSING
+    else
+        require part ANY in state IDLE_IDLE
+    endif
+
+    if( celem->class->load_process <> NULL ) then
+        load_proc = do_load_process( )
+        if (load_proc == NULL) then
+            --
+            -- No pass till load process pre_req are available
+            --
+            return
+        endif
+    endif
+    for ii = celem->num_in_parts to 1 by -1 do
+        the_part = celem->in_parts[ii]
+        open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Store_Write.txt' for text append as 1
+        write(#1,sim_time,'\t',celem->name,'\t','Entered',cr)
+        close#1
+        pass(the_part)
+    endfor
+end
+
+procedure P_cap_stat_Route()
+var
+the_part:part
+begin
+    the_part = celem->out_parts[1]
+    open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Store_Write.txt' for text append as 1
+    write(#1,sim_time,'\t',celem->name,'\t','Routed',cr)
+    close#1
+    transfer the_part thru output 1
+end
