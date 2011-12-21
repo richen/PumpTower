@@ -21,6 +21,7 @@ procedure P_manager_logic()
 var
 the_elem:element
 P_num:integer
+P_equip_busy_time:integer
 begin
     open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Store_Cap.txt' for text append as 1
     the_elem = get_element('P_Tube_Store_1')
@@ -51,14 +52,18 @@ begin
     write(#1,sim_time,'\t',the_elem->name,'\t',the_elem->busy_time,cr)
     
     the_elem = get_element('P_CRN_AGV1_1')
-    write(#1,sim_time,'\t',the_elem->name,'\t',the_elem->busy_time,cr)
+    P_equip_busy_time = the_elem->percent_unload_time*sim_time + the_elem->busy_time
+    write(#1,sim_time,'\t',the_elem->name,'\t',P_equip_busy_time,cr)
     
     the_elem = get_element('P_CRN_AGV2_1')
-    write(#1,sim_time,'\t',the_elem->name,'\t',the_elem->busy_time,cr)
+    P_equip_busy_time = the_elem->percent_unload_time*sim_time + the_elem->busy_time
+    write(#1,sim_time,'\t',the_elem->name,'\t',P_equip_busy_time,cr)
     
     the_elem = get_element('P_CRN_AGV4_1')
-    write(#1,sim_time,'\t',the_elem->name,'\t',the_elem->busy_time,cr)
+    P_equip_busy_time = the_elem->percent_unload_time*sim_time + the_elem->busy_time
+    write(#1,sim_time,'\t',the_elem->name,'\t',P_equip_busy_time,cr)
     
+    -- write(the_elem->percent_unload_time,'  ',the_elem->percent_unload_time*sim_time,'  ',the_elem->busy_time,'  ',the_elem->percent_unload_time*sim_time/(sim_time+1),'  ',the_elem->busy_time/(sim_time+1),cr)
     close #1
     
     
