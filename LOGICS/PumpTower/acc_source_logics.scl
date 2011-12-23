@@ -119,6 +119,9 @@ Begin
             if(Diameter_val<500)then
                 set_part_display( the_part, 2 ) 
             endif
+            if(Diameter_val<300)then
+                set_part_display( the_part, 3 ) 
+            endif
         endfor
         close #2
     endwhile

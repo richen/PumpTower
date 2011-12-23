@@ -57,8 +57,11 @@ begin
         the_tube->QTY = celem->QTY
         the_tube->Diameter = celem->Diameter
         the_tube->transport_tool = 'crn'
-        if(the_tube->Diameter<500)then
+        if(the_tube->Diameter>300)then
             set_part_display( the_tube, 2 )
+        endif
+        if(the_tube->Diameter>500)then
+            set_part_display( the_tube, 3 )
         endif
         
         container_part = produce(get_part_class('Tube_Pal'))

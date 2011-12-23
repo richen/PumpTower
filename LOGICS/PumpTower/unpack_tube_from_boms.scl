@@ -36,12 +36,16 @@ begin
         the_prt->Diameter = the_part->Diameter
         the_prt->PLAN_SN = the_part->PLAN_SN
         tube_display_idx = 1
-        if(the_prt->Diameter<500)then
-            tube_display_idx = tube_display_idx + 1
+        if(the_prt->Diameter>300)then
+            tube_display_idx = 2
+        endif
+        if(the_prt->Diameter>500)then
+            tube_display_idx = 3
         endif
         if(the_part->QTY == 1)then
-            tube_display_idx = tube_display_idx + 2
+            tube_display_idx = tube_display_idx + 3
         endif
+        -- write(the_prt->Diameter,'  ',the_prt->QTY,'  ',tube_display_idx,CR)
         set_part_display( the_prt, tube_display_idx ) 
     endfor
     close #1

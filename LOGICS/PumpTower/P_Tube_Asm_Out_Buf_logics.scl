@@ -26,6 +26,9 @@ begin
     close #1 
     
     dest_buf = get_element('P_Tube_Warehouse_Buf_1')
+    if(the_part->Diameter< 200)then
+        Set_Part_Stack_Index( the_part, dest_buf, 15 ) 
+    endif
     wait until dest_buf->Curr_Tube_Cnt < dest_buf->MAX_CAP frequency 600
     dest_buf->Curr_Tube_Cnt = dest_buf->Curr_Tube_Cnt + 1
     if(celem->out[2]==null)then

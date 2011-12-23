@@ -62,6 +62,9 @@ begin
             close #6
             P_proc_cycle_time = P_proc_cycle_time * the_part->QTY
             --write(proc_str,'  ',P_proc_cycle_time,cr)
+            if(the_part->Diameter< 200)then
+                P_proc_cycle_time = P_proc_cycle_time * 0.8
+            endif
             return P_proc_cycle_time
         endif
     endfor
@@ -90,6 +93,9 @@ begin
         if(proc_str==celem->curr_proc->name)then
             close #6
             --write(proc_str,'  ',P_proc_cycle_time,cr)
+            if(the_part->Diameter< 200)then
+                P_proc_cycle_time = P_proc_cycle_time * 0.8
+            endif
             return P_proc_cycle_time
         endif
     endfor
@@ -123,6 +129,9 @@ begin
                 P_proc_cycle_time = P_proc_cycle_time * (the_part->QTY - 1)
             endif
             --write(proc_str,'  ',P_proc_cycle_time,cr)
+            if(the_part->Diameter< 200)then
+                P_proc_cycle_time = P_proc_cycle_time * 0.8
+            endif
             return P_proc_cycle_time
         endif
     endfor
