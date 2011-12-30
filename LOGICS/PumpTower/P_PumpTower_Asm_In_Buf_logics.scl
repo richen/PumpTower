@@ -5,6 +5,8 @@
     Assemble parts to pumptower
     Orientech Shanghai, All Rights Reserved.
 *******************************************************************************/
+user_attrib
+P_ASM_TIME:real
 
 EXTERN
 get_asm_name_of_key:routine :string
@@ -44,6 +46,7 @@ begin
         
     endif
     celem->QTY = celem->QTY + the_part->QTY
+    wait until (sim_time > celem->P_ASM_TIME) frequency 600
     if(celem->QTY >= celem->total_cnt)then
         --write(celem->KEY,'  ',celem->QTY ,'  ', celem->total_cnt,cr)
         for ii = celem->num_in_parts to 1 by -1 do

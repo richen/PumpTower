@@ -7,6 +7,9 @@
 *******************************************************************************/
 
 #include <PumpTower.inc>
+user_attrib
+P_ASM_TIME:real
+
 const
    P_MAX_PRODUCE_NUMBER_CONST   1024
 extern
@@ -35,9 +38,10 @@ begin
     endif
     in_buf = celem->in[1]->in[1]
     P_Current_Plan_SN_IDX = P_Current_Plan_SN_IDX + 1
+    in_buf->P_ASM_TIME = PumpTower_Plan[P_Current_Plan_SN_IDX].asm_start_time
     -- in_buf->PLAN_SN_IDX = P_Current_Plan_SN_IDX
     in_buf->PLAN_SN = PumpTower_Plan[P_Current_Plan_SN_IDX].name
-    --write(in_buf->name,'  ',in_buf->PLAN_SN,cr)
+    -- write(in_buf->name,'  ',in_buf->PLAN_SN,'  ',PumpTower_Plan[P_Current_Plan_SN_IDX].asm_start_time,cr)
     in_buf->KEY = 'PumpTower-S17-S16-S15-S14-S13-S12-S11-S10-S9-S8-S7-S6-S5-S4-S3-S2-S1'
     P_set_props_for_pumptower_asm_buf(in_buf->KEY,in_buf)
 end

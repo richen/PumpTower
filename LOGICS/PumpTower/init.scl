@@ -9,6 +9,10 @@
 #include <PumpTower.inc>
 const
    P_MAX_PRODUCE_NUMBER_CONST   1024
+   
+user_attrib
+P_ASM_TIME:real
+
 Var
 	 PumpTower_Plan  :array[P_MAX_PRODUCE_NUMBER_CONST] of PumpTower_Struc
 	 PumpTower_Plan_tail:integer
@@ -22,7 +26,7 @@ extern
 procedure PumpTower_Read_workplan()
 Var
 line,part_type:string
-at_time:real
+at_time,asm_time:real
 columns:integer
 begin
     PumpTower_Plan_tail = 0
@@ -44,6 +48,7 @@ begin
         columns = scan_str(line, "\t, ", part_type, at_time)
         PumpTower_Plan[PumpTower_Plan_tail].name = part_type
         PumpTower_Plan[PumpTower_Plan_tail].start_time = at_time
+        PumpTower_Plan[PumpTower_Plan_tail].asm_start_time = at_time
         PumpTower_Plan_tail = PumpTower_Plan_tail + 1
     endwhile
 end
@@ -149,9 +154,12 @@ begin
     for ii = 1 to the_elem_cls->num_element do
         the_elem = the_elem_cls->elements[ii]
         P_Current_Plan_SN_IDX = P_Current_Plan_SN_IDX + 1
+        the_elem->P_ASM_TIME = PumpTower_Plan[P_Current_Plan_SN_IDX].asm_start_time
         the_elem->PLAN_SN = PumpTower_Plan[P_Current_Plan_SN_IDX].name
         the_elem->KEY = 'PumpTower-S17-S16-S15-S14-S13-S12-S11-S10-S9-S8-S7-S6-S5-S4-S3-S2-S1'
         P_set_props_for_pumptower_asm_buf(the_elem->KEY,the_elem)
-        delay 50*3600*24
+        if(PumpTower_Plan[2].asm_start_time < 4000)then
+            delay 50*3600*24
+        endif
     endfor
 end
