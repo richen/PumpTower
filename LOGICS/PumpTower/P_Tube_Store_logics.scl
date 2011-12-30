@@ -21,5 +21,8 @@ begin
     the_part = celem->out_parts[1]
     wait until (the_elem->Curr_Tube_Cnt < the_elem->MAX_CAP) frequency 600
     the_elem->Curr_Tube_Cnt = the_elem->Curr_Tube_Cnt + the_part->QTY
+    open file 'D:\\deneb\\ODLP\\OUTPUT\\PumpTower\\P_Store_Write.txt' for text append as 1
+    write(#1,sim_time,'\t',celem->name,'\t','Routed',cr)
+    close#1
     transfer the_part
 end

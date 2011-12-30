@@ -17,7 +17,7 @@ Var
 extern
 	 P_get_file_path_by_key     :routine:string
 	 short_name_of_key          :routine:string
-	  P_Current_Plan_SN_IDX :integer
+	 P_Current_Plan_SN_IDX      :integer
 	 
 procedure PumpTower_Read_workplan()
 Var
